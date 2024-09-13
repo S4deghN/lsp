@@ -264,6 +264,14 @@ export def JumpToLspLocation(location: dict<any>, cmdmods: string)
   var bnr: number = fname->bufnr()
   if cmdmods->empty()
     if bnr == bufnr()
+
+      var jump_line = range.start.line + 1
+      if jump_line == line('.')
+        # then we're not really jumping :)
+        WarnMsg("LSP did't return a different location")
+        return
+      endif
+
       # Set the previous cursor location mark. Instead of using setpos(), m' is
       # used so that the current location is added to the jump list.
       :normal m'
